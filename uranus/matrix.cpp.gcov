@@ -1,0 +1,63 @@
+		/***************************************************************************
+		                          matrix.cpp  -  description
+		                             -------------------
+		    begin                : Tue Jul 24 2002
+		    copyright            : (C) 2002 by Marco Bubke
+		    email                : marco@bubke.de
+		 ***************************************************************************/
+		
+		/***************************************************************************
+		 *                                                                         *
+		 *   This program is free software; you can redistribute it and/or modify  *
+		 *   it under the terms of the GNU Lesser General Public License as        *
+		 *   published by the Free Software Foundation; 2.1 of the License.        *
+		 *                                                                         *                                                                         *
+		 ***************************************************************************/
+		
+		#include "matrix.h"
+		#include "math.h"
+		
+		namespace Ah {
+		
+		Matrix::Matrix()
+       10001    	: ReferenceCounter(), angle(0.0)
+       10001    {
+       10001    	matrix[0] = 1.0;
+       10001        matrix[1] = 0.0;
+       10001        matrix[2] = 0.0;
+       10001        matrix[3] = 0.0;
+       10001        matrix[4] = 0.0;
+       10001        matrix[5] = 1.0;
+       10001        matrix[6] = 0.0;
+       10001        matrix[7] = 0.0;
+       10001    	matrix[8] = 0.0;
+       10001        matrix[9] = 0.0;
+       10001        matrix[10] = 1.0;
+       10001        matrix[11] = 0.0;
+       10001        matrix[12] = 0.0;
+       10001        matrix[13] = 0.0;
+       10001        matrix[14] = 0.0;
+       10001        matrix[15] = 1.0;
+		
+		}
+		
+		void Matrix::move(float x, float y)
+       10083    {
+       10083    	matrix[12] += x;
+       10083        matrix[13] += y;
+		}
+		
+		void Matrix::zoom(float zoom)
+      ######    {
+      ######    	matrix[15] *= zoom;
+		}
+		
+		void Matrix::rotate(float newangle)
+         106    {
+         106    	angle += newangle;
+         106    	matrix[0] = cosf(angle);
+         106        matrix[1] = sinf(angle);
+         106        matrix[4] = -sin(angle);
+         106        matrix[5] = cosf(angle);
+		 }
+		};

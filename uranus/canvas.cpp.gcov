@@ -1,0 +1,67 @@
+		/***************************************************************************
+		                          canvas.cpp  -  description
+		                             -------------------
+		    begin                : Tue Jul 23 2002
+		    copyright            : (C) 2002 by Marco Bubke
+		    email                : marco@bubke.de
+		 ***************************************************************************/
+		
+		/***************************************************************************
+		 *                                                                         *
+		 *   This program is free software; you can redistribute it and/or modify  *
+		 *   it under the terms of the GNU Lesser General Public License as        *
+		 *   published by the Free Software Foundation;        version 2.1 of      *
+		 *   the License.                                                          *
+		 *                                                                         *
+		 ***************************************************************************/
+		
+		#include <GL/gl.h>
+		#include <GL/glu.h>
+		
+		#include "canvas.h"
+		#include "simpleshader.h"
+		
+		
+		
+		namespace Ah {
+		
+		Canvas::Canvas()
+           1    	: Group()
+           1    {
+           1    	modelview = ModelViewMatrixStack::instance();
+           1    	bgcolor = Color(1.0f, 1.0f, 1.0f, 0.0f);
+           1        setShader(new SimpleShader());
+		}
+		
+		
+		void Canvas::predraw()
+         232    {
+         232    	Color color(getBackgroundColor());
+         232    	glClearColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+         232        glClear(GL_COLOR_BUFFER_BIT);
+         232        modelview->identity();
+         232        multiplyMatrix();
+         232        getFirst()->draw();
+		}
+		
+		void Canvas::postdraw()
+         232    {
+         232    	glFinish();
+		}
+		
+		void Canvas::setViewport(int width, int height)
+          39    {
+		
+          39    	glMatrixMode(GL_PROJECTION);
+          39       	glLoadIdentity();
+          39       	gluOrtho2D(-static_cast<GLdouble>(width)/2, static_cast<GLdouble>(width)/2, -static_cast<GLdouble>(height)/2, static_cast<GLdouble>(height)/2);
+          39        glViewport (0, 0, width, height);
+          39    	glMatrixMode(GL_MODELVIEW);
+		
+		}
+		
+		
+		Canvas::~Canvas()
+      ######    {
+      ######    }
+		};

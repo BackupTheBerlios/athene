@@ -1,0 +1,185 @@
+		/***************************************************************************
+		                          element.cpp  -  description
+		                             -------------------
+		    begin                : Tue Jul 26 2002
+		    copyright            : (C) 2002 by Marco Bubke
+		    email                : marco@bubke.de
+		 ***************************************************************************/
+		
+		/***************************************************************************
+		 *                                                                         *
+		 *   This program is free software; you can redistribute it and/or modify  *
+		 *   it under the terms of the GNU Lesser General Public License as        *
+		 *   published by the Free Software Foundation; 2.1 of the License.        *
+		 *                                                                         *                                                                         *
+		 ***************************************************************************/
+		
+		#include <GL/glu.h>
+		
+		#include "element.h"
+		#include "elementset.h"
+		
+		
+		namespace Ah {
+		
+		unsigned int Element::selectionCounter = 1;
+		
+		bool Element::selectionMode = false;
+		
+		Element::Element()
+       10001    	: next(0), previous(0), parent(0), first(this), last(this), holder(0), stopdrawing(false)
+       10001    {
+       10001    	selectionNumber = selectionCounter++;
+		}
+		
+		Element::~Element()
+      ######    {
+      ######    	holder = 0;
+      ######        if(first!=parent) delete first;
+      ######        next = 0;
+      ######        previous = 0;
+      ######        parent = 0;
+      ######        first = 0;
+      ######        last = 0;
+      ######    }
+		
+		void Element::remove()
+		{
+      ######    	previous->setNext(next);
+      ######        next->setPrevious(previous);
+      ######        if(parent == next) parent->setLast(previous);
+      ######        if(parent == previous) parent->setFirst(next);
+      ######        if(!holder)
+      ######        	delete this;
+		    else
+		    {
+      ######        next = 0;
+      ######        previous = 0;
+      ######        parent = 0;
+		    }
+		}
+		
+		Element* Element::takeout()
+      ######    {
+      ######    	previous->setNext(next);
+      ######        next->setPrevious(previous);
+      ######        if(parent == next) parent->setLast(previous);
+      ######        if(parent == previous) parent->setFirst(next);
+      ######        next = 0;
+      ######        previous = 0;
+      ######        parent = 0;
+      ######        return this;
+		}
+		
+		void Element::appendElement(Element* element)
+        9999    {
+        9999    	element->setPrevious(this);
+        9999        element->setNext(next);
+        9999    	next->setPrevious(element);
+        9999     	next = element;
+        9999        element->setParent(parent);
+        9999        element->initilize();
+		}
+		
+		void Element::prependElement(Element* element)
+      ######    {
+      ######    	element->setPrevious(previous);
+      ######        element->setNext(this);
+      ######        previous->setNext(element);
+      ######    	previous = element;
+      ######        element->setParent(parent);
+      ######        element->initilize();
+		}
+		
+		void Element::appendChild(Element* element)
+       10000    {
+       10000    	if(last != this)
+        9999    		last->appendElement(element);
+		  	else
+		    {
+           1        	last = element;
+           1            first = element;
+           1            element->setNext(this);
+           1            element->setPrevious(this);
+           1            element->setParent(this);
+		     	}
+		}
+		
+		void Element::prependChild(Element* element)
+      ######    {
+      ######    	if(first!=this)
+      ######        	first->prependElement(element);
+			else
+		    {
+      ######        	last = element;
+      ######            first = element;
+      ######            element->setNext(this);
+      ######            element->setPrevious(this);
+      ######            element->setParent(this);
+		        }
+		}
+		
+		void Element::setParent(Element* element)
+       10000    {
+       10000    	parent = element;
+		
+		}
+		
+		void Element::setPrevious(Element* element)
+       19999    {
+       19999    	previous = element;
+		
+		}
+		
+		void Element::setNext(Element* element)
+       10000    {
+       10000    	next = element;
+		
+		}
+		
+		void Element::setFirst(Element* element)
+      ######    {
+      ######    	first = element;
+		
+		}
+		
+		void Element::setLast(Element* element)
+      ######    {
+      ######    	last = element;
+		
+		}
+		
+		void Element::initilize()
+        9999    {
+		}
+		
+		void Element::removeHolder()
+      ######    {
+      ######    	holder=0;
+		}
+		
+		ElementHolder* Element::getHolder()
+      ######    {
+      ######    	if(!holder)
+      ######    		holder = new ElementHolder(this);
+      ######      	holder->ref();
+      ######        return holder;
+		}
+		
+		void Element::beginSelection() const
+     2320000    {
+     2320000    	if(selectionMode)
+      ######    		glPushName(selectionNumber);
+		}
+		
+		void Element::endSelection() const
+     2320000    {
+     2320000    	if(selectionMode)
+      ######    		glPopName();
+		}
+		
+		SelectionStack* Element::getSelections(double x, double y, double width, double height)
+      ######    {
+		}
+		};
+		

@@ -1,0 +1,51 @@
+		/***************************************************************************
+		                          main.cpp  -  description
+		                             -------------------
+		    begin                : Tue Jul 23 17:43:26 CEST 2002
+		    copyright            : (C) 2002 by Marco Bubke
+		    email                : marco@bubke.de
+		 ***************************************************************************/
+		
+		/***************************************************************************
+		 *                                                                         *
+		 *   This program is free software; you can redistribute it and/or modify  *
+		 *   it under the terms of the GNU General Public License as published by  *
+		 *   the Free Software Foundation; either version 2 of the License, or     *
+		 *   (at your option) any later version.                                   *
+		 *                                                                         *
+		 ***************************************************************************/
+		
+		
+		
+		#include <qapplication.h>
+		
+		#include "qcanvas.h"
+		#include "rectangle.h"
+		#include "color.h"
+		#include "simpleshader.h"
+		#include <stdlib.h>
+		
+		
+		
+		int main( int argc, char **argv )
+           1    {
+           1        QApplication a( argc, argv );
+		
+           1        Ah::QCanvas* canvas = new Ah::QCanvas(0);
+		//    canvas.resize( 300, 200 );
+       10001    	for (int i = 0; i < 10000; i++)
+		    {
+       10000        	Ah::Rectangle* rect = new Ah::Rectangle(0.0, .0, 10, 10);
+       10000            Ah::SimpleShader* shader = new Ah::SimpleShader(Ah::Color(drand48(), drand48(), drand48(), drand48()));
+		//		rect->setFillColor(drand48(), drand48(), drand48(), drand48());
+       10000            rect->getMatrix()->move((0.5 - drand48())*1000, (0.5 - drand48()) *1000);
+       10000            rect->setShader(shader);
+		//       printf("red %f\n", rect->getFillColor().getRed());
+       10000        	canvas->appendChild(rect);
+		//		printf("red2 %f\n", rect->getFillColor().getRed());
+		    }
+           1        a.setMainWidget( canvas );
+           1        canvas->show();
+           1        return a.exec();
+           1    }
+		

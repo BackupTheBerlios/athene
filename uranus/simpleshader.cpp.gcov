@@ -1,0 +1,40 @@
+		/***************************************************************************
+		                          simpleshader.cpp  -  description
+		                             -------------------
+		    begin                : Tue Jul 25 2002
+		    copyright            : (C) 2002 by Marco Bubke
+		    email                : marco@bubke.de
+		 ***************************************************************************/
+		
+		/***************************************************************************
+		 *                                                                         *
+		 *   This program is free software; you can redistribute it and/or modify  *
+		 *   it under the terms of the GNU Lesser General Public License as        *
+		 *   published by the Free Software Foundation; 2.1 of the License.        *
+		 *                                                                         *                                                                         *
+		 ***************************************************************************/
+		
+		#include "simpleshader.h"
+		#include <GL/gl.h>
+		
+		namespace Ah {
+		
+		SimpleShader::SimpleShader()
+           1    	: Shader(), color(0.0f, 0.0f, 0.0f, 0.0f)
+           1    {
+		}
+		
+		SimpleShader::SimpleShader(const Color& color)
+       10000    	: Shader(), color(color)
+       10000    {
+		}
+		void SimpleShader::drawColor()
+       10000    {
+       10000    	glColor4fv(color.getArray());
+		}
+		
+		void SimpleShader::setColor(const Color& newcolor)
+      ######    {
+      ######    	color = newcolor;
+		}
+      ######    };
